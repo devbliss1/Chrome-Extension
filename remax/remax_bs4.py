@@ -107,7 +107,8 @@ def main():
   print(f'The result saved as "{output_file_name}" in "{output_directory}" folder.')
 
 if __name__ == "__main__":
-  input_url = input("Please enter your URL: ")
+  # input_url = input("Please enter your URL: ")
+  input_url = 'https://www.remax.com/real-estate-agents?searchQuery={%22filters%22:{%22mustHavePhoto%22:true,%22licensedIn%22:[%22MS%22]}}'
 
   # Identify valid url
   base_url = 'https://www.remax.com/real-estate-agents'
@@ -119,7 +120,8 @@ if __name__ == "__main__":
       if input_url is not None:
         break
   
-  output_file_name = f'output_{datetime.now().strftime("%m-%d-%Y_%H-%M-%S")}.csv'
+  # output_file_name = f'output_{datetime.now().strftime("%m-%d-%Y_%H-%M-%S")}.csv'
+  output_file_name = 'remax_MS.csv'
   output_directory = 'output'
   if not os.path.exists(output_directory):
     os.makedirs(output_directory)
