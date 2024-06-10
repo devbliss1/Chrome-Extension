@@ -32,7 +32,7 @@ def gen_page_url(page_url_id):
   query_params = parse_qs(parsed_url.query)
   search_query_json = query_params.get('searchQuery', [''])[0]
   search_query_dict = json.loads(search_query_json)
-  search_query_dict.update({"count": 192, "pageNumber": page_url_id})
+  search_query_dict.update({"count": 96, "pageNumber": page_url_id})
   updated_search_query_json = json.dumps(search_query_dict)
   encoded_search_query = urlencode({'searchQuery': updated_search_query_json})
   return f'{parsed_url.scheme}://{parsed_url.netloc}{parsed_url.path}?{encoded_search_query}'
@@ -66,12 +66,10 @@ def main():
     page_num = int(soup.find_all('button', class_='d-pagination-page-button')[-2].text)
   except:
     page_num = 1
-  # print(f'This URL has {page_num} pages')
+  print(f'This URL has {page_num} pages')
 
   for page_id in range(1, page_num + 1):
-    # print(f'--- {page_id} page ---')
-    progress_rate = int(100 * page_id / page_num)
-    print(f'{progress_rate}% waiting...')
+    print(f'--- {page_id} page ---')
 
     # Parse URL of each page
     page_url = gen_page_url(page_id)
@@ -103,12 +101,11 @@ def main():
       file_o_csv.writerow(output)
       open_out.close()
   add_header()
-  # remove_duplications()
-  print(f'The result saved as "{output_file_name}" in "{output_directory}" folder.')
+  remove_duplications()
+  print('Finished')
 
 if __name__ == "__main__":
-  # input_url = input("Please enter your URL: ")
-  input_url = 'https://www.remax.com/real-estate-agents?searchQuery={%22filters%22:{%22mustHavePhoto%22:true,%22licensedIn%22:[%22MS%22]}}'
+  input_url = input("Please enter your URL: ")
 
   # Identify valid url
   base_url = 'https://www.remax.com/real-estate-agents'
@@ -119,9 +116,9 @@ if __name__ == "__main__":
       input_url = identify_url(input_url)
       if input_url is not None:
         break
+  print(input_url)
   
-  # output_file_name = f'output_{datetime.now().strftime("%m-%d-%Y_%H-%M-%S")}.csv'
-  output_file_name = 'remax_MS.csv'
+  output_file_name = f'output_{datetime.now().strftime("%m-%d-%Y_%H-%M-%S")}.csv'
   output_directory = 'output'
   if not os.path.exists(output_directory):
     os.makedirs(output_directory)
