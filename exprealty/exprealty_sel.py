@@ -71,13 +71,12 @@ def main():
   agents_count = WebDriverWait(driver, 10).until(
     EC.presence_of_element_located((By.CLASS_NAME, 'Agents_count__r8DES'))
   )
-  item_num = int(agents_count.text.split(' ')[0].replace(',', ''))
-  page_num = math.ceil(item_num / 24)
-  for page_id in range(1, page_num + 1):
-    progress_rate = int(100 * page_id / page_num)
-    print(f'{progress_rate}% waiting...')
-    
-    page_url = identified_url + f'&page={page_id}'
+  print(f'This URL has {agents_count.text.split(' ')[0]} agents.')
+  # page_num = math.ceil(item_num / 24)
+  page_num = 1
+  while True:
+    print(f'{page_num} page scraped')
+    page_url = identified_url + f'&page={page_num}'
     driver.get(page_url)
     element = WebDriverWait(driver, 10).until(
       EC.presence_of_element_located((By.CSS_SELECTOR, '[data-test="name"]'))
@@ -94,6 +93,14 @@ def main():
       file_o_csv = csv.writer(open_out, delimiter=',')
       file_o_csv.writerow(output)
       open_out.close()
+    # Check if the Next button is disabled
+    next_button = driver.find_element(By.CSS_SELECTOR, 'button[data-test="page-next"]')
+    is_disabled = next_button.get_attribute('disabled') is not None
+    if is_disabled:
+      print("The Next button is disabled.")
+      break
+    else:
+      page_num += 1
   add_header()
   remove_duplications()
   print(f'The result saved as "{output_file_name}" in "{output_directory}" folder.')
